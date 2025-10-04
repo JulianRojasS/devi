@@ -1,0 +1,59 @@
+@import 'tailwindcss';
+
+:root {
+  --background: #111827;
+  --primary: #18263c;
+  --secondary: #5eedbe;
+  --accent: #f59e0b;
+  --error: #ef4444;
+  --forground: #f3f4f6;
+  --light: #f3f4f6;
+  --dark: #111827;
+  --gray: #6b7280;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --background: #f3f4f6;
+    --forground: #111827;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #111827;
+    --forground: #f3f4f6;
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--forground);
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+  --color-error: var(--error);
+  --color-light: var(--light);
+  --color-dark: var(--dark);
+  --color-gray: var(--gray);
+}
+
+main {
+  @apply flex flex-col min-h-screen text-foreground;
+}
+
+html {
+  @apply bg-background;
+}
+
+main>section {
+  @apply h-screen;
+}
+
+main>section>section {
+  @apply w-full p-3 overflow-y-auto;
+}
+
+main>section>section>h1 {
+  @apply text-2xl font-bold p-3;
+}
