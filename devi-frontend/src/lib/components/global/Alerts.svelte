@@ -4,7 +4,7 @@
   $: alertsList = $alerts;
 </script>
 
-<div class="absolute top-0 right-0 w-100">
+<div class="absolute top-0 right-0 w-100 z-50">
   {#each alertsList as alert, index}
     <AlertItem alert={alert} />
   {/each}

@@ -20,6 +20,11 @@
 			email,
 			password
 		};
+
+		if (!email || !password) {
+			addAlert('error', 'Por favor, ingrese un email y contraseña válidos.');
+			return;
+		}
 		
 		try {
 			const response = await SendRequest<User>('users/login', 'POST', JSON.stringify(data));
@@ -61,17 +66,17 @@
 </script>
 
 <section
-	class="from-primary/30 via-secondary/5 to-dark/10 flex h-screen w-full bg-gradient-to-br sm:flex-col md:flex-row"
+	class="flex h-screen w-full sm:flex-col md:flex-row"
 >
 	<div
-		class="z-5 flex flex-col items-center justify-center gap-8 p-8 sm:absolute sm:w-full md:relative md:w-1/3"
+		class="z-5 flex flex-col items-center justify-center gap-3 p-8 sm:absolute sm:w-full md:relative md:w-1/3"
 	>
-		<h1 class="text-2xl">Devi - Login</h1>
-		<form
-			on:submit|preventDefault={handleLogin}
-			action=""
-			class="bg-dark/30 z-3 flex flex-col gap-6 rounded-lg px-6 py-10 shadow-lg"
-		>
+	<form
+	on:submit|preventDefault={handleLogin}
+	action=""
+	class="bg-dark/20 z-3 flex flex-col gap-6 rounded-2xl px-6 py-5 shadow-2xl shadow-secondary/20"
+	>
+		<h1 class="text-center text-3xl font-bold capitalize">Login on Devi</h1>
 			<input
 				bind:value={email}
 				type="email"
@@ -86,10 +91,11 @@
 			/>
 			<button
 				type="submit"
-				class="bg-accent cursor-pointer rounded-sm p-2 transition-transform hover:scale-105"
+				class="bg-accent self-center cursor-pointer rounded-sm py-2 px-10 transition-transform hover:scale-105"
 				>Login</button
 			>
 		</form>
+		<a class="hover:underline" href="/regist">Sign in</a>
 	</div>
 	<div class="relative overflow-hidden sm:w-full md:w-2/3">
 		{#each circles as circle (circle.id)}

@@ -1,5 +1,6 @@
 import { Entity, Column, ManyToOne, JoinColumn, PrimaryColumn } from 'typeorm';
 import { User } from '../users/user.entity';
+import { Apps } from 'src/apps/apps.entity';
 
 @Entity('otps')
 export class Otps {
@@ -17,6 +18,11 @@ export class Otps {
     onUpdate: 'CURRENT_TIMESTAMP',
   })
   updatedAt: Date;
+  @Column({ type: 'char', length: 36, nullable: true })
+  appId: string | null;
+  @ManyToOne(() => Apps, (app) => app.id)
+  @JoinColumn({ name: 'appId' })
+  app: Apps;
   @Column({ type: 'char', length: 36 })
   userId: string;
   @ManyToOne(() => User, (user) => user.id)

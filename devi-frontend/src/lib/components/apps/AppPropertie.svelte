@@ -3,21 +3,26 @@
 		property,
 		name,
 		isLink,
-		editable = false
-	}: { property: string; name: string; isLink: boolean; editable: boolean } = $props();
+	}: { property?: string; name: string; isLink: boolean } = $props();
 </script>
 
-<div class="flex items-center gap-2">
+<div class="flex flex-col justify-center gap-2">
 	{#if property}
 		{#if isLink}
-			<a href={property} target="_blank" class="text-xl underline">{name}</a>
+			<span class="flex gap-2">
+				<b class="text-accent">{name}:</b> 
+				<a href={property} target="_blank" class="underline text-accent">Go to {name}</a>
+			</span>
 		{:else}
-			<p>{name}: {property}</p>
+			<span class="flex gap-2">
+				<b class="text-light">{name}:</b> 
+				<p class="text-light">{property}</p>
+			</span>
 		{/if}
 	{:else}
-		<p>No {name}</p>
-	{/if}
-	{#if editable}
-		<button class="text-xl underline">Edit</button>
+		<span class="flex gap-2">
+			<b class="text-light">{name}:</b> 
+			<p class="text-light">No {name}</p>
+		</span>
 	{/if}
 </div>

@@ -6,10 +6,17 @@ export const load = async ({ cookies }) => {
 		'GET',
 		undefined,
 		undefined,
-		false,
+		cookies.get('devi-actk')
+	);
+	const apps = await SendRequest<Apps[]>(
+		'apps',
+		'GET',
+		undefined,
+		undefined,
 		cookies.get('devi-actk')
 	);
 	return {
-		otps
+		otps,
+		apps
 	};
 };

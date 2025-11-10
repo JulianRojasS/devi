@@ -6,6 +6,9 @@ import { LoggerMiddleware } from './common/middleware/logger.midleware';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppsModule } from './apps/apps.module';
 import { OtpsModule } from './otps/otps.module';
+import { StagesModule } from './stages/stages.module';
+import { TasksModule } from './tasks/tasks.module';
+import { DockerModule } from './docker/docker.module';
 
 @Module({
   imports: [
@@ -13,7 +16,7 @@ import { OtpsModule } from './otps/otps.module';
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
-      port: 5433,
+      port: 5432,
       username: 'postgres',
       password: '123456',
       database: 'devi',
@@ -22,6 +25,9 @@ import { OtpsModule } from './otps/otps.module';
     }),
     AppsModule,
     OtpsModule,
+    StagesModule,
+    TasksModule,
+    DockerModule,
   ],
   controllers: [AppController],
   providers: [AppService],

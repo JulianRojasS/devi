@@ -6,6 +6,7 @@
 import { addAlert } from '$lib/stores/alerts';
 export default function validator<T>(data: result<T | undefined>, successMessage?: string): T | undefined | null {
 	// Si el statusCode es 200 y success es true, retornar los datos
+	console.log(data);
 	if (data.statusCode === 200 && data.success || data.statusCode === 201 && data.success) {
 		if (successMessage) {
 			addAlert('success', successMessage);

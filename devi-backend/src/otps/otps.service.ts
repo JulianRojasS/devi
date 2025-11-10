@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Otps } from './otps.entity';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UsersService } from 'src/users/users.service';
 import { CreateOtpsDto } from './dto/create-otps.dto';
@@ -31,22 +31,35 @@ export class OtpsService {
   }
 
   async findAll(): Promise<Otps[]> {
-    return this.otpsRepository.find();
+    return this.otpsRepository.find({ relations: ['app', 'user'] });
   }
 
   async findOne(id: string): Promise<Otps | null> {
-    return this.otpsRepository.findOne({ where: { id } });
+    return this.otpsRepository.findOne({
+      where: { id },
+      relations: ['app', 'user'],
+    });
   }
 
   async update(id: string, otp: CreateOtpsDto): Promise<Otps> {
-    return this.otpsRepository.save(otp);
+    const otpToUpdate = await this.otpsRepository.findOne({ where: { id } });
+    if (!otpToUpdate) {
+      throw new NotFoundException('Otp not found');
+    }
+    otpToUpdate.name = otp.name;
+    otpToUpdate.appId = otp.appId;
+    otpToUpdate.updatedAt = new Date();
+    return this.otpsRepository.save(otpToUpdate);
   }
 
-  async delete(id: string): Promise<void> {
-    await this.otpsRepository.delete(id);
+  async delete(id: string): Promise<DeleteResult> {
+    return await this.otpsRepository.delete(id);
   }
 
   async findByUserId(userId: string): Promise<Otps[]> {
-    return this.otpsRepository.find({ where: { userId } });
+    return this.otpsRepository.find({
+      where: { userId },
+      relations: ['app', 'user'],
+    });
   }
 }

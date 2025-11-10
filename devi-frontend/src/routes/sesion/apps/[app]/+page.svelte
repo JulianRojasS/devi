@@ -1,66 +1,91 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import validator from '../../../../utils/validator';
-	import AppPropertie from '../../../../lib/components/apps/AppPropertie.svelte';
 	import Modal from '$lib/components/global/Modal.svelte';
 	import Forms from '$lib/components/global/Forms.svelte';
+	import FormItem from '$lib/components/global/FormItem.svelte';
+	import AppInfo from '$lib/components/apps/AppInfo.svelte';
+	import AppStages from '$lib/components/stages/AppStages.svelte';
 	export let data;
 	$: app = {} as Apps;
-	$: isOpen = false;
-	const getStatusColor = (status: string) => {
-		switch (status) {
-			case 'active':
-				return 'bg-green-500';
-			case 'inactive':
-				return 'bg-red-500';
-			case 'pending':
-				return 'bg-yellow-500';
-			default:
-				return 'bg-gray-500';
+	$: editImage = false;
+	$: editInfo = false;
+	$: logoUrl = app.logoUrl;
+	$: description = app.description;
+	$: websiteUrl = app.websiteUrl;
+	$: githubUrl = app.githubUrl;
+	$: name = app.name;
+	$: stages = [] as Stages[];
+	$: appId = app.id;
+	$: users = [] as User[];
+	const handleEdit = async () => {
+		const data = {
+			...app,
+			logoUrl,
+			description,
+			websiteUrl,
+			githubUrl,
+			name,
+			user: null
+		};
+		const res = await fetch(`/api/apps/update`, {
+			method: 'PUT',
+			body: JSON.stringify(data)
+		});
+		const response = validator(await res.json(), 'App updated successfully');
+		if (response) {
+			window.location.reload();
 		}
 	};
 
+	const handleRemoveImage = async () => {
+		logoUrl = '';
+		handleEdit();
+	};
+
 	onMount(() => {
-		const res = validator(data.app);
-		console.log(res);
-		if (res) {
-			app = res;
+		const appRes = validator(data.app);
+		const stagesRes = validator(data.stages);
+		const usersRes = validator(data.users);
+		if (appRes && stagesRes && usersRes) {
+			app = appRes;
+			stages = stagesRes;
+			users = usersRes;
 		}
 	});
 </script>
 
 <section class="flex flex-col gap-2">
-	<header class="flex items-center justify-between">
-		<span class="flex items-center gap-2">
-			<a href="/sesion/apps" class="text-xl underline">Back</a>
-			<h1 class="text-2xl font-bold capitalize">{app.name}</h1>
-		</span>
-		<button class="{getStatusColor(app.status)} rounded-md p-1">{app.status}</button>
-	</header>
-	<div class="self-center group justify-center flex flex-col items-center">
-		<img
-			src={app.logoUrl || '/no-image.png'}
-			alt={app.name}
-			class="w-50 h-50 self-center rounded-md group-hover:opacity-50 transition-opacity duration-300"
-		>
-		<span class="absolute flex-col gap-2 hidden group-hover:flex transition-opacity duration-300">
-			<button class="text-xl underline" on:click={() => isOpen = true}>Edit</button>
-			<button class="text-xl underline">Delete</button>
-		</span>
-	</div>
-	<div class="w-full text-center text-xl text-gray-500">
-		<p>{app.description}</p>
-		<button class="text-xl underline">Edit</button>
-	</div>
-	<div>
-		<AppPropertie property={app.createdAt} name="Created At" isLink={false} editable={false} />
-		<AppPropertie property={app.updatedAt} name="Last Updated" isLink={false} editable={false} />
-		<AppPropertie property={app.websiteUrl} name="Website" isLink={true} editable={true} />
-		<AppPropertie property={app.githubUrl} name="GitHub" isLink={true} editable={true} />
-	</div>
-	<Modal isOpen={isOpen} onClose={() => isOpen = false}>
+	<AppInfo
+		{app}
+		editInfo={(value) => (editInfo = value)}
+		editImage={(value) => (editImage = value)}
+		handleRemoveImage={() => handleRemoveImage()}
+	/>
+	<AppStages {stages} {appId} {users} />
+	<Modal isOpen={editImage} onClose={() => (editImage = false)}>
 		<Forms width="100%">
-			<input type="text">
+			<FormItem name="Logo" label="Logo">
+				<input type="text" name="logoUrl" placeholder="Logo" bind:value={logoUrl} />
+			</FormItem>
+			<button class="rounded-md bg-accent p-2 text-primary" on:click={handleEdit}>Edit</button>
+		</Forms>
+	</Modal>
+	<Modal isOpen={editInfo} onClose={() => (editInfo = false)}>
+		<Forms width="100%">
+			<FormItem name="Name" label="Name">
+				<input type="text" bind:value={name} />
+			</FormItem>
+			<FormItem name="Description" label="Description">
+				<textarea name="description" placeholder="Description" bind:value={description}></textarea>
+			</FormItem>
+			<FormItem name="Website" label="Website">
+				<input type="text" bind:value={websiteUrl} />
+			</FormItem>
+			<FormItem name="GitHub" label="GitHub">
+				<input type="text" name="githubUrl" placeholder="GitHub" bind:value={githubUrl} />
+			</FormItem>
+			<button class="rounded-md bg-accent p-2 text-primary" on:click={handleEdit}>Edit</button>
 		</Forms>
 	</Modal>
 </section>

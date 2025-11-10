@@ -1,7 +1,7 @@
 import { authenticator, totp } from 'otplib';
 import { json } from '@sveltejs/kit';
 
-export async function GET({url}) {
+export async function GET({url}: {url: URL}) {
   const secret = url.searchParams.get('secret')
   if (!secret) {
     return json({ error: 'Secret is required' }, { status: 400 });

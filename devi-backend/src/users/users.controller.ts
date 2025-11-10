@@ -98,4 +98,11 @@ export class UsersController {
     const token = authHeader.replace('Bearer ', '');
     return this.usersService.logout(token);
   }
+
+  @UseGuards(AuthGuard)
+  @Get('profile/me')
+  profile(@Headers('authorization') authHeader: string) {
+    const token = authHeader.replace('Bearer ', '');
+    return this.usersService.profile(token);
+  }
 }

@@ -28,13 +28,17 @@ export class HttpExceptionFilter implements ExceptionFilter {
         : HttpStatus.INTERNAL_SERVER_ERROR;
 
     const model = response.req.path.split('/')[1] || 'unknown';
+    const error =
+      exception instanceof HttpException
+        ? exception.getResponse()
+        : JSON.stringify(exception);
     console.log(exception);
     const errorResponse: ErrorResponse = {
       success: false,
       statusCode: status,
       error:
         exception instanceof HttpException
-          ? exception.getResponse()
+          ? JSON.stringify(error)
           : JSON.stringify(exception),
       model,
       date: new Date().toISOString(),

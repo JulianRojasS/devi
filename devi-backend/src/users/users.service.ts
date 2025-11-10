@@ -156,30 +156,82 @@ export class UsersService {
   }
 
   async logout(token: string) {
-    const data = jwt.decode(token, { json: true });
-    if (!data) {
+    try {
+      const data = jwt.verify(token, process.env.SESION_SECRET!) as {
+        email: string;
+        roles: string[];
+      };
+      if (!data || !data.email) {
+        return { message: 'Invalid token' };
+      }
+
+      const user = await this.getByEmail(data.email);
+      if (!user) {
+        return { message: 'User not found' };
+      }
+      await this.updateUser(user.id, { token: null, verified: false }); /// clear token and mark as unverified
+      return { message: 'Logout successful' };
+    } catch (error) {
+      if (error.name === 'TokenExpiredError') {
+        return { message: 'Token expired' };
+      }
       return { message: 'Invalid token' };
     }
-    const { email } = data as { email: string };
-
-    const user = await this.getByEmail(email);
-    if (!user) {
-      return { message: 'User not found' };
-    }
-    await this.updateUser(user.id, { token: null, verified: false }); /// clear token and mark as unverified
-    return { message: 'Logout successful' };
   }
 
   getByEmail(email: string) {
     return this.userRepo.findOne({ where: { email } });
   }
 
-  getByToken(token: string) {
-    const data = jwt.decode(token, { json: true });
-    if (!data) {
+  async getByToken(token: string) {
+    try {
+      const data = jwt.verify(token, process.env.SESION_SECRET!) as {
+        email: string;
+        roles: string[];
+      };
+      if (!data || !data.email) {
+        return null;
+      }
+      return await this.getByEmail(data.email);
+    } catch {
       return null;
     }
-    const { email } = data;
-    return this.getByEmail(email);
+  }
+
+  async profile(token: string) {
+    if (!token) {
+      return { message: 'No token provided' };
+    }
+
+    try {
+      // Verificar y decodificar el token con la clave secreta
+      const data = jwt.verify(token, process.env.SESION_SECRET!) as {
+        email: string;
+        roles: string[];
+      };
+
+      if (!data || !data.email) {
+        return { message: 'Invalid token' };
+      }
+
+      const user = await this.getByEmail(data.email);
+      if (!user) {
+        return { message: 'User not found' };
+      }
+
+      // Verificar que el usuario no haya hecho logout (token no debe ser null)
+      if (user.token === null) {
+        return { message: 'User has logged out' };
+      }
+
+      return user;
+    } catch (error) {
+      if (error.name === 'TokenExpiredError') {
+        return { message: 'Token expired' };
+      } else if (error.name === 'JsonWebTokenError') {
+        return { message: 'Invalid token' };
+      }
+      return { message: 'Token verification failed' };
+    }
   }
 }

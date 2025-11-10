@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 import { Apps } from './apps.entity';
 import { CreateAppDto } from './dto/create-app.dto';
 import { v4 } from 'uuid';
@@ -13,33 +13,51 @@ export class AppsService {
   ) {}
 
   async createApp(app: CreateAppDto, user: string): Promise<Apps> {
-    return this.appsRepository.save({
-      id: v4(),
+    const newApp: CreateAppDto = {
       ...app,
-      user: { id: user },
-      status: 'active',
-    });
+      id: v4(),
+      userId: user,
+      status: 'pending',
+    };
+    console.log(newApp);
+    return this.appsRepository.save(newApp);
   }
 
   async getApp(id: string): Promise<Apps> {
-    return this.appsRepository.findOne({ where: { id } }) as Promise<Apps>;
+    return this.appsRepository.findOne({
+      where: { id },
+      relations: ['user'],
+    }) as Promise<Apps>;
   }
 
   async getApps(): Promise<Apps[]> {
-    return this.appsRepository.find();
+    return this.appsRepository.find({ relations: ['user'] });
   }
 
   async updateApp(id: string, app: CreateAppDto): Promise<Apps> {
-    return this.appsRepository.save(app);
+    const appToUpdate = await this.appsRepository.findOne({
+      where: { id },
+      relations: ['user'],
+    });
+    if (!appToUpdate) {
+      throw new HttpException('App not found', HttpStatus.NOT_FOUND);
+    }
+    appToUpdate.name = app.name;
+    appToUpdate.websiteUrl = app.websiteUrl;
+    appToUpdate.logoUrl = app.logoUrl;
+    appToUpdate.githubUrl = app.githubUrl;
+    appToUpdate.description = app.description;
+    return this.appsRepository.save(appToUpdate);
   }
 
-  async deleteApp(id: string): Promise<void> {
-    await this.appsRepository.delete(id);
+  async deleteApp(id: string): Promise<DeleteResult> {
+    return await this.appsRepository.delete(id);
   }
 
   async getAppsByUserId(user: string): Promise<Apps[]> {
     return this.appsRepository.find({
       where: { user: { id: user } },
+      relations: ['user'],
     }) as Promise<Apps[]>;
   }
 }

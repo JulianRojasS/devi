@@ -7,6 +7,7 @@
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
+	<title>Devi</title>
 </svelte:head>
 
 <Alerts />

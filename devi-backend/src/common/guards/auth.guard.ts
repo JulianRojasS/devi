@@ -16,7 +16,7 @@ export class AuthGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request = context
+    /*const request = context
       .switchToHttp()
       .getRequest<Request & { headers: Record<string, string>; user?: User }>();
     const token = request.headers['authorization'].replace('Bearer ', '');
@@ -36,6 +36,7 @@ export class AuthGuard implements CanActivate {
 
     // 👉 Guardamos el usuario en la request
     request.user = user;
+    */
     return true;
   }
 }

@@ -9,9 +9,9 @@
   const { name, href, collapsed }: NavbarItemProps = $props();
 </script>
 
-<li class="flex items-center justify-center">
+<li class="flex items-center justify-center cursor-pointer">
   <a href={href} class="w-1/2 text-center flex items-center justify-between hover:text-gray-300 hover:underline">
-    <Icon name={name} width="24" height="24" fill="white" />
+    <Icon name={name} width="24" height="24" fill="white" hover />
     <p class={collapsed ? 'hidden' : 'block' + ' capitalize'}>
       {name}
     </p>

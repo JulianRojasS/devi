@@ -6,13 +6,16 @@
 	interface OtpsPageProps {
 		data: {
 			otps: result<Otps[] | null | undefined>;
+			apps: result<Apps[] | null | undefined>;
 		}
 	}
 	const { data }: OtpsPageProps = $props();
   let otps: Otps[] = $state([]);
+  let apps: Apps[] = $state([]);
   let progress = $state(0);
   onMount(() => {
 		otps = validator(data.otps) || [];
+		apps = validator(data.apps) || [];
 	});
   const refreshCode = () => {
     fetch(`/api/opt?secret=0`)
@@ -37,7 +40,7 @@
   <div class="p-3 grid grid-cols-4 gap-2">
     {#if otps}
       {#each otps as otp}
-        <OptItem {otp} {progress} />
+        <OptItem {otp} {progress} {apps} />
       {/each}
     {/if}
   </div>

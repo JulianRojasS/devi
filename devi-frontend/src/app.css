@@ -1,7 +1,7 @@
 @import 'tailwindcss';
 
 :root {
-  --background: #111827;
+  --background: #040b1a;
   --primary: #18263c;
   --secondary: #5eedbe;
   --accent: #f59e0b;
@@ -47,7 +47,7 @@ html {
 }
 
 main>section {
-  @apply h-screen;
+  @apply h-screen bg-gradient-to-bl from-dark via-secondary/50 to-dark;
 }
 
 main>section>section {

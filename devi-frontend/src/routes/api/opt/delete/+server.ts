@@ -1,6 +1,7 @@
 import SendRequest from "../../../../utils/SendRequest";
+import type { Cookies } from "@sveltejs/kit";
 
-export async function DELETE({ url, cookies }) {
+export async function DELETE({ url, cookies }: { url: URL, cookies: Cookies }) {
 	const id = url.searchParams.get('id');
 	if (!id) {
 		return Response.json({ error: 'ID is required' }, { status: 400 });

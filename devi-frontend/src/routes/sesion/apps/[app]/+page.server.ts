@@ -9,7 +9,23 @@ export const load = async ({ cookies, params }) => {
 		undefined,
 		cookies.get('devi-actk')
 	);
+	const stages = await SendRequest<Stages[]>(
+		`stages/app/${appId}`,
+		'GET',
+		undefined,
+		undefined,
+		cookies.get('devi-actk')
+	);
+	const users = await SendRequest<User[]>(
+		`users`,
+		'GET',
+		undefined,
+		undefined,
+		cookies.get('devi-actk')
+	);
 	return {
-		app
+		app,
+		stages,
+		users
 	};
 };

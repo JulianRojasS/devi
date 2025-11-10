@@ -4,11 +4,11 @@
 	$: collapsed = true;
 </script>
 
-<header class="grid grid-rows-6 border-r px-2 text-center {collapsed ? 'w-16' : 'w-44'} transition-all duration-300">
+<header class="grid grid-rows-6 border-r px-2 text-center {collapsed ? 'w-16' : 'w-44'} transition-all duration-300 {collapsed ? 'bg-gradient-to-r from-background to-transparent' : 'bg-white/5'}">
 	<div class="row-span-1 py-3 flex flex-col items-center gap-3">
 		<Icon
 			hover
-			name={collapsed ? 'collapse' : 'expand'}
+			name={collapsed ? 'expand' : 'collapse'}
 			width="24"
 			height="24"
 			fill="white"
@@ -25,10 +25,11 @@
 			<NavbarItem name="home" href="/sesion/home" collapsed={collapsed} />
 			<NavbarItem name="apps" href="/sesion/apps" collapsed={collapsed} />
 			<NavbarItem name="otps" href="/sesion/otps" collapsed={collapsed} />
+			<NavbarItem name="docker" href="/sesion/docker" collapsed={collapsed} />
 		</ul>
 	</nav>
-	<ul class="row-span-1 flex flex-1 flex-col justify-center">
+	<ul class="row-span-1 flex flex-1 flex-col justify-center gap-3">
 		<NavbarItem name="user" href="/sesion/user" collapsed={collapsed} />
-		<NavbarItem name="logout" href="/sesion/logout" collapsed={collapsed} />
+		<NavbarItem name="exit" href="/api/sesion/logout" collapsed={collapsed} />
 	</ul>
 </header>

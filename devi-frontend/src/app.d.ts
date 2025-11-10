@@ -34,7 +34,7 @@ declare global {
 		profilePictureUrl?: string;
 		lastLogin?: Date;
 		bio?: string;
-		location?: string;
+		location?: string;	
 		website?: string;
 		githubUrl?: string;
 		linkedinUrl?: string;
@@ -47,7 +47,7 @@ declare global {
 		createdAt: string;
 		updatedAt: string;
 		websiteUrl: string;
-		status: 'active' | 'inactive' | 'pending';
+		status: 'completed' | 'incomplete' | 'pending';
 		githubUrl: string;
 		userId: string;
 		user: User;
@@ -59,6 +59,81 @@ declare global {
 		createdAt: string;
 		updatedAt: string;
 		userId: string;
+		appId: string;
+		app: Apps;
+	}
+	interface Stages {
+		id: string;
+		name: string;
+		description: string;
+		createdAt: string;
+		updatedAt: string;
+		appId: string;
+		creatorId: string;
+		status: 'completed' | 'incomplete' | 'pending';
+		expectedCompletionDate: string;
+		completionDate: string;
+		userId: string;
+		user: User;
+		creator: User;
+		app: Apps;
+		currentTaskId?: string;
+		currentTask?: Task;
+		progress?: number;
+	}
+	interface Tasks {
+		id: string;
+		name: string;
+		description: string;
+		createdAt: string;
+		updatedAt: string;
+		stageId: string;
+		stage: Stages;
+		creatorId: string;
+		creator: User;
+		userId: string;
+		user: User;
+		status: 'completed' | 'incomplete' | 'pending';
+		startDate?: string;
+		endDate?: string;
+	}
+	interface Docker {
+		id: string;
+		name: string;
+		host: string;
+		port: number;
+		active: boolean;
+		createdAt: string;
+	}
+	interface Container {
+		Id: string;
+		Names: string[];
+		Image: string;
+		ImageID: string;
+		Command: string;
+		Created: number;
+		State: string;
+		Status: string;
+		Ports: {
+			PrivatePort: number;
+			PublicPort: number;
+			Type: string;
+		}[];
+		Labels: Record<string, string>;
+		NetworkSettings: {
+			Networks: Record<string, {
+				IPAMConfig: Record<string, string>;
+				Links: string[];
+				Aliases: string[];
+				NetworkID: string;
+			}>;
+		};
+		Mounts: {
+			Source: string;
+			Destination: string;
+			Mode: string;
+			RW: boolean;
+		}[];
 	}
 }
 

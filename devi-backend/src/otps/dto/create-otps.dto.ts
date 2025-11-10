@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateOtpsDto {
   @IsNotEmpty()
@@ -7,4 +7,7 @@ export class CreateOtpsDto {
   @IsNotEmpty()
   @IsString()
   name: string;
+  @IsOptional()
+  @IsString()
+  appId: string | null;
 }

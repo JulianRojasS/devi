@@ -22,8 +22,8 @@ export class Apps {
   updatedAt: Date;
   @Column({ type: 'text', nullable: true })
   websiteUrl?: string;
-  @Column({ type: 'enum', enum: ['active', 'inactive', 'pending'] })
-  status: 'active' | 'inactive' | 'pending';
+  @Column({ type: 'enum', enum: ['completed', 'incomplete', 'pending'] })
+  status: 'completed' | 'incomplete' | 'pending';
   @Column({ type: 'text', nullable: true })
   githubUrl?: string;
   /// user relationship

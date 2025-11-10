@@ -31,6 +31,7 @@
 </script>
 
 <Forms>
+	<h2 class="text-lg font-bold">New App</h2>
 	<FormItem name="name" label="Name">
 		<input type="text" name="name" placeholder="Name" bind:value={name} />
 	</FormItem>

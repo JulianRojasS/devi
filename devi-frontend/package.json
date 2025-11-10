@@ -36,6 +36,7 @@
 		"vite": "^7.0.4"
 	},
 	"dependencies": {
-		"otplib": "^12.0.1"
+		"otplib": "^12.0.1",
+		"uuid": "^13.0.0"
 	}
 }
