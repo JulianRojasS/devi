@@ -4,7 +4,7 @@
 	import Forms from '../global/Forms.svelte';
 	import FormItem from '../global/FormItem.svelte';
 	import validator from '../../../utils/validator';
-
+	import Icon from '../global/Icon.svelte';
 	export let stages: Stages[];
 	export let appId: string;
 	export let addStage: boolean = false;
@@ -35,16 +35,25 @@
 
 </script>
 
-<section class="flex flex-col gap-2 p-3 bg-light/5 rounded-sm">
+<section class="flex flex-col grow gap-2 p-3 bg-light/10 rounded-sm h-full">
 	<header class="flex items-center justify-between gap-3">
 		<h1 class="text-2xl font-bold capitalize">Stages</h1>
 		<button class="bg-accent text-light rounded-md p-1 hover:bg-accent/80 transition-all duration-300 cursor-pointer hover:scale-105" on:click={() => (addStage = true)}>Add Stage</button>
 	</header>
-	<ul class="p-2 border-t border-gray-500 space-y-2">
-		{#if stages}
+	<ul class="px-1 py-3 border-t border-light space-y-2 h-full">
+		{#if stages.length > 0}
 			{#each stages as stage, index}
 				<StageItem {stage} {index} />
 			{/each}
+		{:else}
+			<div class="flex flex-col items-center h-full justify-center gap-2 text-light p-2">
+				<Icon name="info" width="20" height="20" fill="white" />
+				<p class="text-lg font-bold">No stages found</p>
+				<p>Please create a new stage to get started</p>
+				<button class="bg-accent text-light rounded-md p-1 hover:bg-accent/80 transition-all duration-300 cursor-pointer hover:scale-105" on:click={() => (addStage = true)}>
+					Create first stage
+				</button>
+			</div>
 		{/if}
 	</ul>
 	<Modal isOpen={addStage} onClose={() => (addStage = false)}>

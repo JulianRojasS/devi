@@ -74,9 +74,9 @@
 	<form
 	on:submit|preventDefault={handleLogin}
 	action=""
-	class="bg-dark/20 z-3 flex flex-col gap-6 rounded-2xl px-6 py-5 shadow-2xl shadow-secondary/20"
+	class="bg-dark/40 z-3 flex flex-col gap-6 rounded-2xl px-6 py-5 shadow-2xl shadow-secondary/50 text-light"
 	>
-		<h1 class="text-center text-3xl font-bold capitalize">Login on Devi</h1>
+		<h1 class="text-center text-3xl font-bold capitalize text-light">Login on Devi</h1>
 			<input
 				bind:value={email}
 				type="email"
@@ -91,11 +91,11 @@
 			/>
 			<button
 				type="submit"
-				class="bg-accent self-center cursor-pointer rounded-sm py-2 px-10 transition-transform hover:scale-105"
+				class="bg-accent text-light font-bold self-center cursor-pointer rounded-sm py-2 px-10 transition-transform hover:scale-105"
 				>Login</button
 			>
 		</form>
-		<a class="hover:underline" href="/regist">Sign in</a>
+		<a class="hover:underline font-bold text-light" href="/regist">Sign in</a>
 	</div>
 	<div class="relative overflow-hidden sm:w-full md:w-2/3">
 		{#each circles as circle (circle.id)}

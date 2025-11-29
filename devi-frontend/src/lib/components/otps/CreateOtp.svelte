@@ -24,16 +24,19 @@
 	};
 </script>
 
-<Forms width="300px">
-	<FormItem label="Name" name="name">
-		<input type="text" name="name" placeholder="Name" bind:value={name} />
-	</FormItem>
-	<FormItem label="Secret" name="secret">
-		<input type="text" name="secret" placeholder="Secret" bind:value={secret} />
-	</FormItem>
-	<button
-		class="bg-accent self-center rounded-md px-2 py-1 text-white"
-		type="submit"
-		on:click|preventDefault={handleSubmit}>Create</button
-	>
-</Forms>
+<div class="w-70 border-b">
+	<h2 class="text-lg font-bold">Create OTP</h2>
+	<Forms>
+		<FormItem label="Name" name="name">
+			<input type="text" name="name" placeholder="Name" bind:value={name} />
+		</FormItem>
+		<FormItem label="Secret" name="secret">
+			<input type="text" name="secret" placeholder="Secret" bind:value={secret} />
+		</FormItem>
+		<button
+			class="bg-accent self-center rounded-md px-2 py-1 text-white"
+			type="submit"
+			on:click|preventDefault={handleSubmit}>Create</button
+		>
+	</Forms>
+</div>

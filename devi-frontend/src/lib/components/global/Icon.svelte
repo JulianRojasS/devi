@@ -1,18 +1,14 @@
 <script lang="ts">
-  interface IconProps {
-    name: string;
-    width: string;
-    height: string;
-    fill: string;
-    onClick?: () => void;
-    hover?: boolean;
-  }
-
-  const { name, width, height, fill, onClick, hover }: IconProps = $props();
+	export let name: string = 'info';
+	export let width: string | undefined;
+	export let height: string | undefined;
+	export let fill: string | undefined;
+	export let onClick: (() => void) | undefined = undefined;
+	export let hover: boolean | undefined = false;
 </script>
 
 <button onclick={onClick} aria-label={name}>
-  <svg  width={width} height={height} fill={fill} class="mx-auto {hover ? 'hover:fill-accent cursor-pointer' : ''}">
-    <use href={`/icons/icons.svg#${name}`} />
-  </svg>
+	<svg {width} {height} {fill} class="mx-auto {hover ? 'cursor-pointer hover:fill-accent' : ''}">
+		<use href={`/icons/icons.svg#${name}`} />
+	</svg>
 </button>

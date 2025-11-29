@@ -81,9 +81,12 @@
 		<span>
 			<h2 class="text-lg font-bold">{otp.name}</h2>
 			{#if otp.app}
-				<p>
+				<a href={`/sesion/apps/${otp.app.id}`} class="text-accent underline">
 					{otp.app.name}
-				</p>
+					<Icon name="arrow-right" width="16" height="16" fill="white" />
+				</a>
+			{:else}
+				<u>Unlinked</u>
 			{/if}
 		</span>
 		<div class="flex items-center gap-2">
@@ -127,18 +130,20 @@
 			{Math.round(progress)}s
 		</div>
 	</div>
-	<Modal {isOpen} onClose={() => (isOpen = false)}>
-		<div class="w-full text-light">
-			<Forms width="100%">
-				<FormItem name="App" label="App">
-					<select name="appId" bind:value={selectedApp}>
-						{#each apps as app}
-							<option value={app.id}>{app.name}</option>
-						{/each}
-					</select>
-				</FormItem>
-				<button onclick={handleLink}>Link</button>
-			</Forms>
-		</div>
-	</Modal>
+	{#if apps.length > 0}
+		<Modal {isOpen} onClose={() => (isOpen = false)}>
+			<div class="w-full text-light">
+				<Forms width="100%">
+					<FormItem name="App" label="App">
+						<select name="appId" bind:value={selectedApp}>
+							{#each apps as app}
+								<option value={app.id}>{app.name}</option>
+							{/each}
+						</select>
+					</FormItem>
+					<button onclick={handleLink}>Link</button>
+				</Forms>
+			</div>
+		</Modal>
+	{/if}
 </div>

@@ -6,6 +6,7 @@
 	import FormItem from '$lib/components/global/FormItem.svelte';
 	import AppInfo from '$lib/components/apps/AppInfo.svelte';
 	import AppStages from '$lib/components/stages/AppStages.svelte';
+	import AppOtps from '$lib/components/apps/AppOtps.svelte';
 	export let data;
 	$: app = {} as Apps;
 	$: editImage = false;
@@ -18,6 +19,8 @@
 	$: stages = [] as Stages[];
 	$: appId = app.id;
 	$: users = [] as User[];
+	$: otps = [] as Otps[];
+
 	const handleEdit = async () => {
 		const data = {
 			...app,
@@ -47,10 +50,12 @@
 		const appRes = validator(data.app);
 		const stagesRes = validator(data.stages);
 		const usersRes = validator(data.users);
-		if (appRes && stagesRes && usersRes) {
+		const otpsRes = validator(data.otps);
+		if (appRes && stagesRes && usersRes && otpsRes) {
 			app = appRes;
 			stages = stagesRes;
 			users = usersRes;
+			otps = otpsRes;
 		}
 	});
 </script>
@@ -62,7 +67,10 @@
 		editImage={(value) => (editImage = value)}
 		handleRemoveImage={() => handleRemoveImage()}
 	/>
-	<AppStages {stages} {appId} {users} />
+	<section class="flex gap-2 grow">
+		<AppStages {stages} {appId} {users} />
+		<AppOtps {otps} />
+	</section>
 	<Modal isOpen={editImage} onClose={() => (editImage = false)}>
 		<Forms width="100%">
 			<FormItem name="Logo" label="Logo">

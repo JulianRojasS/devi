@@ -12,20 +12,6 @@
   --gray: #6b7280;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    --background: #f3f4f6;
-    --forground: #111827;
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #111827;
-    --forground: #f3f4f6;
-  }
-}
-
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--forground);
@@ -47,7 +33,7 @@ html {
 }
 
 main>section {
-  @apply h-screen bg-gradient-to-bl from-dark via-secondary/50 to-dark;
+  @apply h-screen bg-gradient-to-bl from-dark via-secondary/40 to-dark;
 }
 
 main>section>section {

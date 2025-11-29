@@ -23,9 +23,17 @@ export const load = async ({ cookies, params }) => {
 		undefined,
 		cookies.get('devi-actk')
 	);
+	const otps = await SendRequest<Otps[]>(
+		`otps/app/${appId}`,
+		'GET',
+		undefined,
+		undefined,
+		cookies.get('devi-actk')
+	);
 	return {
 		app,
 		stages,
-		users
+		users,
+		otps
 	};
 };

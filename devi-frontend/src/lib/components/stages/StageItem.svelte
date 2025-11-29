@@ -33,10 +33,10 @@
 	};
 </script>
 
-<li class="rounded-xl bg-dark p-3">
-	<div class={`flex w-full flex-col items-center justify-between gap-3`}>
-		<div class="flex w-full grow items-start justify-between gap-4">
-			<a href={`/sesion/apps/${stage.appId}/stage/${stage.id}`} class="flex flex-col group">
+<li class="rounded-md bg-light/30 p-2">
+	<div class={`flex w-full flex-col items-center justify-between gap-1`}>
+		<div class="flex w-full grow items-start justify-between">
+			<a href={`/sesion/apps/${stage.appId}/stage/${stage.id}`} class="flex flex-col gap-1 group">
 				<b class="group-hover:text-accent">
 					{index + 1}. {stage.name}
 				</b>
@@ -45,11 +45,11 @@
 						Current Task: {stage.currentTask.name}
 					</p>
 				{:else}
-					<p class="text-sm text-gray-500 group-hover:text-accent">No current task</p>
+					<p class="text-sm text-light group-hover:text-accent">No current task</p>
 				{/if}
 			</a>
 			<span
-				class={`text-sm text-gray-500 ${getStatus(stage.status)} rounded-md px-2 py-1 font-bold capitalize`}
+				class={`text-sm text-light ${getStatus(stage.status)} rounded-md px-2 py-1 font-bold capitalize`}
 				>{stage.status}</span
 			>
 		</div>
@@ -61,7 +61,7 @@
 				<div class="h-[10px] grow rounded-sm bg-gray-300">
 					<div class="h-full bg-green-500" style="width: {stage.progress}%"></div>
 				</div>
-				<p class="text-sm text-gray-500">{stage.progress}%</p>
+				<p class="text-sm text-light">{stage.progress}%</p>
 			</div>
 			<Icon onClick={handleDelete} name="trash" width="20" height="20" fill="white" hover />
 		</div>

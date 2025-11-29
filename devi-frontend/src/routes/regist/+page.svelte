@@ -73,9 +73,9 @@
 	<form
 	on:submit|preventDefault={handleRegist}
 	action=""
-	class="bg-dark/20 z-3 flex flex-col gap-3 rounded-2xl px-6 py-5 shadow-2xl shadow-secondary/20"
+	class="bg-dark/40 z-3 flex flex-col gap-3 rounded-2xl px-6 py-5 shadow-2xl shadow-secondary/50 text-light"
 	>
-		<h1 class="text-center text-3xl font-bold capitalize">Regist on Devi</h1>
+		<h1 class="text-center text-3xl font-bold capitalize text-light">Regist on Devi</h1>
             <label for="name">Name:</label>
 			<input
 				bind:value={name}
@@ -99,7 +99,7 @@
 			/>
 			<button
 				type="submit"
-				class="bg-accent self-center cursor-pointer rounded-sm py-2 px-10 transition-transform hover:scale-105"
+				class="bg-accent text-light font-bold self-center cursor-pointer rounded-sm py-2 px-10 transition-transform hover:scale-105"
 				>Regist</button
 			>
 		</form>

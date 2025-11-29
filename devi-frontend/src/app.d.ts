@@ -12,7 +12,7 @@ declare global {
 		success: boolean;
 		statusCode: number;
 		data?: T;
-		error?: string | object;
+		error?: string | string[] | object;
 		model: string;
 		date: string;
 		'ip-access': string;
@@ -38,6 +38,7 @@ declare global {
 		website?: string;
 		githubUrl?: string;
 		linkedinUrl?: string;
+		githubToken?: string;
 	}
 	interface Apps {
 		id: string;
@@ -78,7 +79,7 @@ declare global {
 		creator: User;
 		app: Apps;
 		currentTaskId?: string;
-		currentTask?: Task;
+		currentTask?: Tasks;
 		progress?: number;
 	}
 	interface Tasks {
@@ -134,6 +135,36 @@ declare global {
 			Mode: string;
 			RW: boolean;
 		}[];
+	}
+	interface GithubRepository {
+		id: string;
+		name: string;
+		description: string;
+		html_url: string;
+		private: boolean;
+		created_at: string;
+		updated_at: string;
+		owner: {
+			login: string;
+			id: string;
+			node_id: string;
+			avatar_url: string;
+			gravatar_id: string;
+			url: string;
+			html_url: string;
+		};
+		permissions: {
+			pull: boolean;
+			push: boolean;
+			admin: boolean;
+		};
+		default_branch: string;
+		open_issues_count: number;
+		forks_count: number;
+		open_issues_count: number;
+		forks_count: number;
+		open_issues_count: number;
+		visibility: 'public' | 'private';
 	}
 }
 

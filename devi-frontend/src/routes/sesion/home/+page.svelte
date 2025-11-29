@@ -1,8 +1,18 @@
-<section class="flex flex-col items-center justify-center gap-3 text-2xl font-bold">
-  <img src="/logo.svg" alt="Devi" class="w-40 h-40" />
-  <p>Welcome to Devi App</p>
-  <p>Devi App is a platform for creating and managing your apps</p>
-  <button class="bg-accent text-white px-2 py-2 rounded-md font-bold" onclick={() => window.location.href = '/sesion/apps'}>
-    Go to apps
-  </button>
+<section class="flex flex-col items-center justify-center gap-3 text-2xl text-center">
+	<img src="/logo.svg" alt="Devi" class="h-40 w-40" />
+	<h2 class="text-3xl font-bold">Welcome to Devi App</h2>
+	<p class="text-lg">Devi App is a platform for creating and managing your apps</p>
+	<h3>Start with:</h3>
+	<ul class="list-decimal w-50 text-left">
+		<li>
+			<a href="/sesion/apps" class="hover:text-accent underline">
+				<p>Manage your apps</p>
+			</a>
+		</li>
+		<li>
+			<a href="/sesion/otps" class="hover:text-accent underline">
+				<p>Create an OTP</p>
+			</a>
+		</li>
+	</ul>
 </section>
