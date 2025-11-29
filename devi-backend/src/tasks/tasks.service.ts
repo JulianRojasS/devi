@@ -135,7 +135,7 @@ export class TasksService {
   async tasksCompilance() {
     const expiredTasks = await this.taskRepository.find({
       /// search tasks that are pending and have an end date in the past
-      where: { status: 'pending', endDate: LessThan(new Date()) },
+      where: { status: 'pending', endDate: LessThan(new Date().toISOString()) },
     });
     for (const task of expiredTasks) {
       await this.taskRepository.save({

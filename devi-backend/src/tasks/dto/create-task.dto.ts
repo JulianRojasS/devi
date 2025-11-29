@@ -1,5 +1,4 @@
 import {
-  IsDate,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -34,11 +33,11 @@ export class CreateTaskDto {
   @IsUUID(4, { message: 'El userId debe ser un UUID válido' })
   userId: string;
   @IsOptional({ message: 'La fecha de inicio es opcional' })
-  @IsDate({ message: 'La fecha de inicio debe ser una fecha' })
-  startDate?: Date;
+  @IsString({ message: 'La fecha de inicio debe ser una cadena de texto' })
+  startDate?: string;
   @IsOptional({ message: 'La fecha de fin es opcional' })
-  @IsDate({ message: 'La fecha de fin debe ser una fecha' })
-  endDate?: Date;
+  @IsString({ message: 'La fecha de fin debe ser una cadena de texto' })
+  endDate?: string;
   @IsOptional()
   @IsString({ message: 'El status debe ser una cadena de texto' })
   @IsIn(['pending', 'in_progress', 'completed', 'expired'], {

@@ -31,9 +31,9 @@ export class Task {
   })
   status: 'completed' | 'in_progress' | 'pending' | 'expired';
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  createdAt: Date;
+  createdAt: string;
   @Column({ type: 'timestamp', nullable: true })
-  startDate?: Date;
+  startDate?: string;
   @Column({ type: 'timestamp', nullable: true })
-  endDate?: Date;
+  endDate?: string;
 }

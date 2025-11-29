@@ -1,5 +1,16 @@
 <script lang="ts">
+	import Icon from "../global/Icon.svelte";
+	import Modal from "../global/Modal.svelte";
+	import Forms from "../global/Forms.svelte";
+	import FormItem from "../global/FormItem.svelte";
+	import { addAlert } from "$lib/stores/alerts";
+	import validator from "../../../utils/validator";
+
 	export let task: Tasks;
+
+	let isOpen = false;
+	let name = task.name;
+	let description = task.description;
 
 	const getStatusColor = (status: string) => {
 		switch (status) {
@@ -29,6 +40,33 @@
 		const diffTime = Math.abs(end.getTime() - start.getTime());
 		const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 		return diffDays;
+	};
+
+	const handleUpdateTask = async () => {
+		try {
+			const data = {
+				name,
+				description,
+				stageId: task.stageId,
+				creatorId: task.creatorId,
+				userId: task.userId,
+				status: task.status,
+				startDate: task.startDate,
+				endDate: task.endDate,
+			}
+			const res = await fetch(`/api/tasks/update?id=${task.id}`, {
+				method: 'PUT',
+				body: JSON.stringify(data)
+			});
+			const response = validator(await res.json(), 'Task updated successfully');
+			if (response) {
+				window.location.reload();
+				isOpen = false;
+			}
+		} catch (error) {
+			console.error('Error en la petición:', error);
+			addAlert('error', 'Error updating task');
+		}
 	};
 </script>
 
@@ -60,5 +98,17 @@
 		{/if}
         <p class={`capitalize rounded-md px-2 py-1 ${getStatusColor(task.status)}`}>{task.status}</p>
 		<p> Assigned to: {task.user?.name || 'No user'}</p>
+		<Icon name="edit" fill="white" width="25" height="25" onClick={() => (isOpen = true)} />
 	</div>
+	<Modal {isOpen} onClose={() => (isOpen = false)}>
+		<Forms width="100%">
+			<FormItem name="Name" label="Name">
+				<input type="text" name="name" placeholder="Name" bind:value={name} />
+			</FormItem>
+			<FormItem name="Description" label="Description">
+				<textarea name="description" placeholder="Description" bind:value={description}></textarea>
+			</FormItem>
+			<button on:click|preventDefault={handleUpdateTask}>Update Task</button>
+		</Forms>
+	</Modal>
 </div>
