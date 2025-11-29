@@ -85,9 +85,11 @@ export class DockerService {
       if (!connection) {
         throw new NotFoundException('Connection not found');
       }
-      console.log(`${connection.host}:${connection.port}/containers/json`);
+      console.log(
+        `${connection.host}:${connection.port}/containers/json?all=true`,
+      );
       const res = await fetch(
-        `${connection.host}:${connection.port}/containers/json`,
+        `${connection.host}:${connection.port}/containers/json?all=true`,
       );
       const data = await res.json();
       return data;
