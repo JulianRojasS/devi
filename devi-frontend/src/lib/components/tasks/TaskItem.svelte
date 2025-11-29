@@ -1,10 +1,10 @@
 <script lang="ts">
-	import Icon from "../global/Icon.svelte";
-	import Modal from "../global/Modal.svelte";
-	import Forms from "../global/Forms.svelte";
-	import FormItem from "../global/FormItem.svelte";
-	import { addAlert } from "$lib/stores/alerts";
-	import validator from "../../../utils/validator";
+	import Icon from '../global/Icon.svelte';
+	import Modal from '../global/Modal.svelte';
+	import Forms from '../global/Forms.svelte';
+	import FormItem from '../global/FormItem.svelte';
+	import { addAlert } from '$lib/stores/alerts';
+	import validator from '../../../utils/validator';
 
 	export let task: Tasks;
 
@@ -52,8 +52,8 @@
 				userId: task.userId,
 				status: task.status,
 				startDate: task.startDate,
-				endDate: task.endDate,
-			}
+				endDate: task.endDate
+			};
 			const res = await fetch(`/api/tasks/update?id=${task.id}`, {
 				method: 'PUT',
 				body: JSON.stringify(data)
@@ -68,25 +68,38 @@
 			addAlert('error', 'Error updating task');
 		}
 	};
+
+	const handleCompleteTask = async () => {
+		try {
+			const res = await fetch(`/api/tasks/complete?id=${task.id}`, {
+				method: 'PUT'
+			});
+			const response = validator(await res.json(), 'Task completed successfully');
+			if (response) {
+				window.location.reload();
+			}
+		} catch (error) {
+			console.error('Error en la petición:', error);
+			addAlert('error', 'Error completing task');
+		}
+	};
 </script>
 
-<div
-	class="flex gap-2 rounded-md border-t-3 bg-dark/10 p-3 {getBorderColor(task.status)}"
->
-	<span class="flex flex-col grow gap-2">
+<div class="border-t-3 bg-dark/10 flex gap-2 rounded-md p-3 {getBorderColor(task.status)}">
+	<span class="flex grow flex-col gap-2">
 		<h3 class="text-2xl font-bold">{task.name}</h3>
-        <p>
-            {task.description || 'No description'}
-        </p>
+		<p>
+			{task.description || 'No description'}
+		</p>
 	</span>
-	<div class="flex flex-col gap-2 items-end">
-        <div>
-            {#if task.startDate && task.endDate}
-                <p>Remaining {getDaysDifference(task.startDate, task.endDate)} days</p>
-            {:else}
-                <p>No start or end date</p>
-            {/if}
-        </div>
+	<div class="flex flex-col items-end gap-2">
+		<div>
+			{#if task.startDate && task.endDate}
+				<p>Remaining {getDaysDifference(task.startDate, task.endDate)} days</p>
+			{:else}
+				<p>No start or end date</p>
+			{/if}
+		</div>
 		{#if task.startDate && task.endDate}
 			<p>
 				start {new Date(task.startDate).toLocaleDateString()} end {new Date(
@@ -96,9 +109,12 @@
 		{:else}
 			<p>No start or end date</p>
 		{/if}
-        <p class={`capitalize rounded-md px-2 py-1 ${getStatusColor(task.status)}`}>{task.status}</p>
-		<p> Assigned to: {task.user?.name || 'No user'}</p>
-		<Icon name="edit" fill="white" width="25" height="25" onClick={() => (isOpen = true)} />
+		<p class={`rounded-md px-2 py-1 capitalize ${getStatusColor(task.status)}`}>{task.status}</p>
+		<p>Assigned to: {task.user?.name || 'No user'}</p>
+		{#if task.status !== 'completed'}
+			<Icon name="edit" fill="white" width="25" height="25" onClick={() => (isOpen = true)} />
+			<Icon name="check" fill="white" width="25" height="25" onClick={() => handleCompleteTask()} />
+		{/if}
 	</div>
 	<Modal {isOpen} onClose={() => (isOpen = false)}>
 		<Forms width="100%">

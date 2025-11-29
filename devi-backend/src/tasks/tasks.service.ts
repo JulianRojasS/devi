@@ -31,9 +31,7 @@ export class TasksService {
       creator: { id: user },
       status: 'pending',
     });
-    if (!stage.currentTask) {
-      await this.stagesService.calculateStageProgress(stage.id);
-    }
+    await this.stagesService.calculateStageProgress(stage.id);
     return newTask;
   }
   async selectCurrentTask(taskId: string): Promise<Task> {

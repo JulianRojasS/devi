@@ -68,11 +68,8 @@ export class TasksController {
     console.log(result);
     return result;
   }
-  @Put(':id')
-  async completeTask(
-    @Param('id') id: string,
-    @Body() task: CreateTaskDto,
-  ): Promise<Task> {
-    return this.tasksService.updateTask(id, task);
+  @Put('complete/:id')
+  async completeTask(@Param('id') id: string): Promise<Task> {
+    return this.tasksService.completeTask(id);
   }
 }
