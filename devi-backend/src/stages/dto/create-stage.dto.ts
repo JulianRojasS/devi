@@ -1,12 +1,9 @@
-import {
-  IsDate,
-  IsNotEmpty,
-  IsNumber,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateStageDto {
+  @IsOptional({ message: 'ID is optional' })
+  @IsString({ message: 'ID must be a string' })
+  id?: string;
   @IsNotEmpty({ message: 'Name is required' })
   @IsString({ message: 'Name must be a string' })
   name: string;
@@ -23,14 +20,14 @@ export class CreateStageDto {
   @IsString({ message: 'Status must be a string' })
   status: 'completed' | 'incomplete' | 'pending';
   @IsOptional({ message: 'Expected completion date is optional' })
-  @IsDate({ message: 'Expected completion date must be a date' })
-  expectedCompletionDate?: Date;
+  @IsString({ message: 'Expected completion date must be a string' })
+  expectedCompletionDate?: string;
   @IsNotEmpty({ message: 'User ID is required' })
   @IsString({ message: 'User ID must be a string' })
   userId: string;
   @IsOptional({ message: 'Completion date is optional' })
-  @IsDate({ message: 'Completion date must be a date' })
-  completionDate?: Date;
+  @IsString({ message: 'Completion date must be a string' })
+  completionDate?: string;
   @IsOptional()
   currentTaskId?: string;
   @IsOptional({ message: 'Progress is optional' })

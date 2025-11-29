@@ -38,9 +38,9 @@ export class Stages {
   @Column({ type: 'enum', enum: ['active', 'inactive', 'pending'] })
   status: 'completed' | 'incomplete' | 'pending';
   @Column({ type: 'timestamp', nullable: true })
-  expectedCompletionDate?: Date;
+  expectedCompletionDate?: string;
   @Column({ type: 'timestamp', nullable: true })
-  completionDate?: Date;
+  completionDate?: string;
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
   @Column({
