@@ -18,7 +18,7 @@
 </script>
 
 <div class="{getAlertColor(alert.type)} p-2 rounded-md max-w-100 flex gap-2 justify-between items-start">
-  <p class="text-base text-light">{@html alert.message}></p>
+  <p class="text-base text-light">{@html alert.message}</p>
   <button onclick={() => removeAlert(alert.id)}>
     <Icon name="close" width="16" height="16" fill="white" />
   </button>
