@@ -45,4 +45,6 @@ export class User {
   githubUrl?: string;
   @Column({ type: 'text', nullable: true })
   linkedinUrl?: string;
+  @Column({ type: 'text', nullable: true })
+  githubToken?: string;
 }

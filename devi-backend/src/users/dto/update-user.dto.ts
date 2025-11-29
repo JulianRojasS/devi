@@ -3,6 +3,16 @@ import { IsEmail, IsOptional, IsString } from 'class-validator';
 export class UpdateUserDto {
   @IsOptional()
   @IsString()
+  id?: string;
+
+  @IsOptional()
+  createdAt?: Date;
+
+  @IsOptional()
+  updatedAt?: Date;
+
+  @IsOptional()
+  @IsString()
   name?: string;
 
   @IsOptional()
@@ -52,4 +62,8 @@ export class UpdateUserDto {
   @IsOptional()
   @IsString()
   token?: string | null;
+
+  @IsOptional()
+  @IsString()
+  githubToken?: string;
 }

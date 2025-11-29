@@ -39,6 +39,10 @@ export class OtpsController {
   findAll() {
     return this.otpsService.findAll();
   }
+  @Get('app/:appId')
+  findByAppId(@Param('appId') appId: string) {
+    return this.otpsService.findByAppId(appId);
+  }
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.otpsService.findOne(id);

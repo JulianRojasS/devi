@@ -1,13 +1,13 @@
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateOtpsDto {
-  @IsNotEmpty()
-  @IsString()
+  @IsNotEmpty({ message: 'Secret is required' })
+  @IsString({ message: 'Secret must be a string' })
   secret: string;
-  @IsNotEmpty()
-  @IsString()
+  @IsNotEmpty({ message: 'Name is required' })
+  @IsString({ message: 'Name must be a string' })
   name: string;
-  @IsOptional()
-  @IsString()
+  @IsOptional({ message: 'App ID is optional' })
+  @IsString({ message: 'App ID must be a string' })
   appId: string | null;
 }

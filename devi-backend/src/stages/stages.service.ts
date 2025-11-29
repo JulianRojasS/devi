@@ -1,15 +1,18 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Inject, forwardRef } from '@nestjs/common';
 import { CreateStageDto } from './dto/create-stage.dto';
 import { Stages } from './stages.entity';
 import { DeleteResult, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { v4 } from 'uuid';
+import { TasksService } from 'src/tasks/tasks.service';
 
 @Injectable()
 export class StagesService {
   constructor(
     @InjectRepository(Stages)
     private stagesRepository: Repository<Stages>,
+    @Inject(forwardRef(() => TasksService))
+    private tasksService: TasksService,
   ) {}
   async createStage(stage: CreateStageDto, user: string): Promise<Stages> {
     return this.stagesRepository.save({
@@ -74,6 +77,23 @@ export class StagesService {
   async getAllStages(): Promise<Stages[]> {
     return this.stagesRepository.find({
       relations: ['user', 'creator', 'currentTask'],
+    });
+  }
+
+  async calculateStageProgress(stageId: string): Promise<Stages> {
+    const stage = await this.getStage(stageId);
+    if (!stage) {
+      throw new NotFoundException('Stage not found');
+    }
+    const tasks = await this.tasksService.getTaskByStageId(stageId);
+    const completedTasks = tasks.filter(
+      (task) => task.status === 'completed',
+    ).length;
+    const progress = Math.round((completedTasks / tasks.length) * 100) || 0;
+    stage.progress = progress;
+    return this.stagesRepository.save({
+      ...stage,
+      progress,
     });
   }
 }

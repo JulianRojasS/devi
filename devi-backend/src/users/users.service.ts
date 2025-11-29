@@ -8,6 +8,33 @@ import { hash, verify } from 'argon2';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
+type GithubRepository = {
+  id: string;
+  name: string;
+  description: string;
+  html_url: string;
+  private: boolean;
+  created_at: string;
+  updated_at: string;
+  owner: {
+    login: string;
+    id: string;
+    node_id: string;
+    avatar_url: string;
+    gravatar_id: string;
+    url: string;
+    html_url: string;
+  };
+  permissions: {
+    pull: boolean;
+    push: boolean;
+    admin: boolean;
+  };
+  default_branch: string;
+  open_issues_count: number;
+  forks_count: number;
+};
+
 @Injectable()
 export class UsersService {
   constructor(
@@ -30,7 +57,7 @@ export class UsersService {
 
   async createUser(userData: CreateUserDto) {
     try {
-      const { name, email, password, roles } = userData;
+      const { name, email, password, roles, githubToken } = userData;
       const emailExists = await this.userRepo.findOne({ where: { email } });
       if (emailExists) {
         throw new HttpException('Email already exists', 400);
@@ -45,6 +72,7 @@ export class UsersService {
         verified: false,
         status: 'active',
         roles: roles || ['user'],
+        githubToken: githubToken,
       };
       await this.userRepo.save(newUser);
       return newUser;
@@ -75,6 +103,7 @@ export class UsersService {
       githubUrl,
       linkedinUrl,
       token,
+      githubToken,
     } = userData;
     const user = await this.getOneById(id);
     if (!user) {
@@ -100,6 +129,7 @@ export class UsersService {
     user.website = website ?? user.website;
     user.githubUrl = githubUrl ?? user.githubUrl;
     user.linkedinUrl = linkedinUrl ?? user.linkedinUrl;
+    user.githubToken = githubToken ?? user.githubToken;
     user.token = token !== undefined ? token : user.token;
     user.updatedAt = new Date();
     await this.userRepo.save(user);
@@ -232,6 +262,37 @@ export class UsersService {
         return { message: 'Invalid token' };
       }
       return { message: 'Token verification failed' };
+    }
+  }
+
+  async fetchGithubRepositories(token: string): Promise<GithubRepository[]> {
+    try {
+      if (!token) {
+        throw new HttpException('Github token not found', 404);
+      }
+      const data = jwt.verify(token, process.env.SESION_SECRET!) as {
+        email: string;
+        roles: string[];
+      };
+      if (!data || !data.email) {
+        throw new HttpException('Invalid token', 401);
+      }
+      const user = await this.getByEmail(data.email);
+      if (!user) {
+        throw new HttpException('User not found', 404);
+      }
+      const response = await fetch('https://api.github.com/user/repos', {
+        headers: {
+          Authorization: `Bearer ${user.githubToken}`,
+        },
+      });
+      const repositories = (await response.json()) as GithubRepository[];
+      return repositories;
+    } catch (error) {
+      throw new HttpException(
+        'Failed to fetch Github repositories: ' + error.message,
+        500,
+      );
     }
   }
 }

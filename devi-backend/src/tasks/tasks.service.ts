@@ -1,16 +1,18 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Inject, forwardRef } from '@nestjs/common';
 import { Task } from './task.entity';
-import { DeleteResult, Repository } from 'typeorm';
+import { DeleteResult, LessThan, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { v4 } from 'uuid';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { StagesService } from 'src/stages/stages.service';
+import { Cron } from '@nestjs/schedule';
 
 @Injectable()
 export class TasksService {
   constructor(
     @InjectRepository(Task)
     private taskRepository: Repository<Task>,
+    @Inject(forwardRef(() => StagesService))
     private stagesService: StagesService,
   ) {}
   async createTask(task: CreateTaskDto, user: string): Promise<Task> {
@@ -25,17 +27,31 @@ export class TasksService {
       status: 'pending',
     });
     if (!stage.currentTask) {
-      this.stagesService.updateStage(stage.id, {
-        appId: stage.appId,
-        name: stage.name,
-        creatorId: stage.creatorId,
-        status: stage.status,
-        userId: stage.userId,
-        currentTaskId: newTask.id,
-        progress: await this.getStageProgress(stage.id),
-      });
+      await this.stagesService.calculateStageProgress(stage.id);
     }
     return newTask;
+  }
+  async selectCurrentTask(taskId: string): Promise<Task> {
+    const task = await this.getTask(taskId); /// get the task to select
+    if (!task) {
+      throw new NotFoundException('Task not found'); /// if the task is not found, throw an error
+    }
+    const stageTasks = await this.getTasks(task.stageId); /// get the tasks of the stage
+    const currentTask = stageTasks.find((t) => t.status === 'in_progress'); /// find the current task
+    if (currentTask) {
+      await this.taskRepository.save({
+        /// if the current task is found, update it to pending
+        ...currentTask,
+        status: 'pending',
+      }); /// update the current task to pending
+    }
+    const result = await this.taskRepository.save({
+      /// update the task to in_progress
+      ...task,
+      status: 'in_progress',
+    });
+    await this.stagesService.calculateStageProgress(task.stageId); /// calculate the stage progress
+    return result; /// return the result
   }
   async getTasks(stageId: string): Promise<Task[]> {
     return this.taskRepository.find({
@@ -80,7 +96,12 @@ export class TasksService {
     if (!task) {
       throw new NotFoundException('Task not found');
     }
-    return this.taskRepository.save({ ...task, status: 'completed' });
+    const result = await this.taskRepository.save({
+      ...task,
+      status: 'completed',
+    });
+    await this.stagesService.calculateStageProgress(task.stageId);
+    return result;
   }
   async getAllTasks(): Promise<Task[]> {
     return this.taskRepository.find({
@@ -105,12 +126,17 @@ export class TasksService {
       relations: ['creator', 'user', 'stage'],
     });
   }
-
-  private async getStageProgress(stageId: string): Promise<number> {
-    const tasks = await this.getTaskByStageId(stageId);
-    const completedTasks = tasks.filter(
-      (task) => task.status === 'completed',
-    ).length;
-    return Math.round((completedTasks / tasks.length) * 100) || 0;
+  @Cron('0 0 * * *') // every day at midnight
+  async tasksCompilance() {
+    const expiredTasks = await this.taskRepository.find({
+      /// search tasks that are pending and have an end date in the past
+      where: { status: 'pending', endDate: LessThan(new Date()) },
+    });
+    for (const task of expiredTasks) {
+      await this.taskRepository.save({
+        ...task,
+        status: 'expired',
+      });
+    }
   }
 }

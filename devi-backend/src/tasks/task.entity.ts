@@ -25,8 +25,11 @@ export class Task {
   @ManyToOne(() => User, (user) => user.id)
   @JoinColumn({ name: 'userId' })
   user: User;
-  @Column({ type: 'enum', enum: ['completed', 'in_progress', 'pending'] })
-  status: 'completed' | 'in_progress' | 'pending';
+  @Column({
+    type: 'enum',
+    enum: ['completed', 'in_progress', 'pending', 'expired'],
+  })
+  status: 'completed' | 'in_progress' | 'pending' | 'expired';
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
   @Column({ type: 'timestamp', nullable: true })

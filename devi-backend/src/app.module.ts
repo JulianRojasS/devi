@@ -9,9 +9,11 @@ import { OtpsModule } from './otps/otps.module';
 import { StagesModule } from './stages/stages.module';
 import { TasksModule } from './tasks/tasks.module';
 import { DockerModule } from './docker/docker.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     UsersModule,
     TypeOrmModule.forRoot({
       type: 'postgres',

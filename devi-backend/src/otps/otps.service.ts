@@ -62,4 +62,11 @@ export class OtpsService {
       relations: ['app', 'user'],
     });
   }
+
+  async findByAppId(appId: string): Promise<Otps[]> {
+    return this.otpsRepository.find({
+      where: { appId },
+      relations: ['app', 'user'],
+    });
+  }
 }

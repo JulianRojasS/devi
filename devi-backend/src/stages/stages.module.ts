@@ -1,13 +1,19 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { StagesController } from './stages.controller';
 import { StagesService } from './stages.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Stages } from './stages.entity';
 import { AppsModule } from 'src/apps/apps.module';
 import { UsersModule } from 'src/users/users.module';
+import { TasksModule } from 'src/tasks/tasks.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Stages]), AppsModule, UsersModule],
+  imports: [
+    TypeOrmModule.forFeature([Stages]),
+    AppsModule,
+    UsersModule,
+    forwardRef(() => TasksModule),
+  ],
   controllers: [StagesController],
   providers: [StagesService],
   exports: [StagesService],
